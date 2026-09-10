@@ -34,16 +34,17 @@ CREATE TABLE IF NOT EXISTS b2b_perfiles (
   participante_id    INTEGER NOT NULL REFERENCES participantes(id) ON DELETE CASCADE,
   razon_social       TEXT NOT NULL,
   rfc                TEXT,
-  sector             TEXT NOT NULL,
-  tamanio_empresa    TEXT,
+  sector             TEXT NOT NULL,                       -- agua_potable | tratamiento | riego_agricola | tecnologia_iot
+                                                          -- construccion | consultoria | equipos_bombas | quimicos | energia | otro
+  tamanio_empresa    TEXT,                                -- micro | pequena | mediana | grande
   sitio_web          TEXT,
-  descripcion        TEXT NOT NULL,
-  tipo_participacion TEXT NOT NULL,
+  descripcion        TEXT NOT NULL,                       -- máx. 500 caracteres
+  tipo_participacion TEXT NOT NULL,                       -- ofrezco | busco | ambos
   productos_ofrece   TEXT,
   productos_busca    TEXT,
-  sectores_interes   TEXT,
-  disponibilidad     TEXT,
-  autoriza_contacto  INTEGER DEFAULT 0,
+  sectores_interes   TEXT,                                -- JSON array: ["agua_potable","consultoria"]
+  disponibilidad     TEXT,                                -- JSON array: ["24_manana","25_tarde"]
+  autoriza_contacto  INTEGER DEFAULT 0,                   -- 0 = no, 1 = sí
   created_at         TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -55,9 +56,9 @@ CREATE TABLE IF NOT EXISTS b2b_citas (
   id             INTEGER PRIMARY KEY AUTOINCREMENT,
   solicitante_id INTEGER NOT NULL REFERENCES b2b_perfiles(id) ON DELETE CASCADE,
   invitado_id    INTEGER NOT NULL REFERENCES b2b_perfiles(id) ON DELETE CASCADE,
-  fecha_hora     TEXT,
-  mesa           INTEGER,
-  estado         TEXT DEFAULT 'pendiente',
+  fecha_hora     TEXT,                                    -- slot asignado, ej. "2026-09-24 11:30"
+  mesa           INTEGER,                                 -- número de cubículo / mesa (1-14)
+  estado         TEXT DEFAULT 'pendiente',                -- pendiente | aceptada | rechazada | realizada
   created_at     TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
