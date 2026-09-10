@@ -37,6 +37,7 @@
         <a href="#programa" class="nav-link">Programa</a>
         <a href="#ecosistema" class="nav-link">Ecosistema B2B</a>
         <a href="#patrocinios" class="nav-link">Patrocinios</a>
+        <a href="#registro" class="nav-link">Registro</a>
         <a href="#contacto" class="nav-link">Contacto</a>
       </nav>
       <div class="nav-actions">
@@ -70,8 +71,8 @@
             <span class="fact-value">9:00 a.m. a 3:30 p.m. · Registro desde las 8:00 a.m.</span>
           </li>
         </ul>
-        <div class="hero-cta reveal" id="registro">
-          <a href="#contacto" class="btn btn-gold">Registro de Asistentes</a>
+        <div class="hero-cta reveal">
+          <a href="#registro" class="btn btn-gold">Registro de Asistentes</a>
           <a href="#patrocinios" class="btn btn-outline-light">Reserva tu Stand</a>
         </div>
         <div class="countdown reveal" id="countdown" aria-label="Cuenta regresiva al evento">
@@ -374,7 +375,224 @@
     </div>
   </section>
 
-  <!-- 6. CONTACTO -->
+  <!-- 6. REGISTRO -->
+  <section class="section section-sand" id="registro">
+    <div class="container">
+      <header class="section-head reveal">
+        <span class="eyebrow">Registro de Participantes</span>
+        <h2>Asegura tu <span class="hl">lugar en el Foro</span></h2>
+        <p class="section-lead">Completa el preregistro con tus datos básicos. Si te interesa participar en el <strong>Networking B2B</strong> para ofrecer productos o servicios, podrás llenar el registro completo de matchmaking.</p>
+      </header>
+
+      <div class="registro-wrap reveal">
+        <form class="reg-form" id="registroForm" novalidate>
+
+          <!-- Paso 1: datos básicos -->
+          <fieldset class="reg-step" id="paso1">
+            <legend><span class="reg-step-num">1</span> Datos del participante</legend>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-nombre">Nombre(s) <i>*</i></label>
+                <input type="text" id="f-nombre" name="nombre" required maxlength="80" autocomplete="given-name" />
+              </div>
+              <div class="form-field">
+                <label for="f-apellidos">Apellidos <i>*</i></label>
+                <input type="text" id="f-apellidos" name="apellidos" required maxlength="80" autocomplete="family-name" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-correo">Correo electrónico <i>*</i></label>
+                <input type="email" id="f-correo" name="correo" required maxlength="120" autocomplete="email" />
+              </div>
+              <div class="form-field">
+                <label for="f-telefono">Teléfono (WhatsApp) <i>*</i></label>
+                <input type="tel" id="f-telefono" name="telefono" required maxlength="20" autocomplete="tel" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-tipo">Tipo de participante <i>*</i></label>
+                <select id="f-tipo" name="tipo_participante" required>
+                  <option value="">Selecciona una opción…</option>
+                  <option value="empresa">Empresa / Industria</option>
+                  <option value="gobierno">Gobierno / Dependencia pública</option>
+                  <option value="academia">Academia / Universidad</option>
+                  <option value="organizacion">Organización de la sociedad civil</option>
+                  <option value="publico">Público general</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="f-organizacion">Empresa u organización</label>
+                <input type="text" id="f-organizacion" name="organizacion" maxlength="150" autocomplete="organization" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-puesto">Puesto</label>
+                <input type="text" id="f-puesto" name="puesto" maxlength="100" autocomplete="organization-title" />
+              </div>
+              <div class="form-field">
+                <label for="f-municipio">Municipio</label>
+                <input type="text" id="f-municipio" name="municipio" maxlength="80" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-dias">Días de asistencia <i>*</i></label>
+                <select id="f-dias" name="dias_asistencia" required>
+                  <option value="ambos" selected>Ambos días (24 y 25 de septiembre)</option>
+                  <option value="24">Solo el 24 de septiembre</option>
+                  <option value="25">Solo el 25 de septiembre</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="b2b-question">
+              <p class="b2b-question-text">¿Te interesa participar en el <strong>Networking B2B</strong> para ofrecer productos y servicios? <i>*</i></p>
+              <div class="b2b-options" role="radiogroup" aria-label="Participación en el Networking B2B">
+                <label class="b2b-opt">
+                  <input type="radio" name="interesa_b2b" value="1" />
+                  <span class="b2b-opt-box"><strong>Sí</strong><small>Continuar al registro B2B de matchmaking</small></span>
+                </label>
+                <label class="b2b-opt">
+                  <input type="radio" name="interesa_b2b" value="0" checked />
+                  <span class="b2b-opt-box"><strong>No</strong><small>Solo asistiré como participante del Foro</small></span>
+                </label>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Paso 2: registro B2B (condicional) -->
+          <fieldset class="reg-step reg-step-b2b" id="paso2" hidden>
+            <legend><span class="reg-step-num">2</span> Registro B2B — Perfil de matchmaking</legend>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-razon">Razón social <i>*</i></label>
+                <input type="text" id="f-razon" name="razon_social" maxlength="150" />
+              </div>
+              <div class="form-field">
+                <label for="f-rfc">RFC</label>
+                <input type="text" id="f-rfc" name="rfc" maxlength="13" />
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-sector">Sector <i>*</i></label>
+                <select id="f-sector" name="sector">
+                  <option value="">Selecciona una opción…</option>
+                  <option value="agua_potable">Agua potable y saneamiento</option>
+                  <option value="tratamiento">Tratamiento y reúso de agua</option>
+                  <option value="riego_agricola">Riego agrícola</option>
+                  <option value="tecnologia_iot">Tecnología e IoT</option>
+                  <option value="construccion">Construcción e infraestructura</option>
+                  <option value="consultoria">Consultoría</option>
+                  <option value="equipos_bombas">Equipos y bombas</option>
+                  <option value="quimicos">Productos químicos</option>
+                  <option value="energia">Energía</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="f-tamanio">Tamaño de la empresa</label>
+                <select id="f-tamanio" name="tamanio_empresa">
+                  <option value="">Selecciona una opción…</option>
+                  <option value="micro">Micro (1–10 empleados)</option>
+                  <option value="pequena">Pequeña (11–50)</option>
+                  <option value="mediana">Mediana (51–250)</option>
+                  <option value="grande">Grande (más de 250)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-web">Sitio web</label>
+                <input type="url" id="f-web" name="sitio_web" maxlength="150" placeholder="https://" />
+              </div>
+              <div class="form-field">
+                <label for="f-tipo-part">Tipo de participación B2B <i>*</i></label>
+                <select id="f-tipo-part" name="tipo_participacion">
+                  <option value="">Selecciona una opción…</option>
+                  <option value="ofrezco">Ofrezco productos o servicios</option>
+                  <option value="busco">Busco productos o servicios</option>
+                  <option value="ambos">Ambos</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <label for="f-descripcion">¿Qué hace tu empresa? <i>*</i></label>
+              <textarea id="f-descripcion" name="descripcion" rows="3" maxlength="500" placeholder="Descripción breve de la empresa (máx. 500 caracteres)"></textarea>
+            </div>
+
+            <div class="form-row">
+              <div class="form-field">
+                <label for="f-ofrece">Productos / servicios que ofrece</label>
+                <textarea id="f-ofrece" name="productos_ofrece" rows="2" maxlength="500" placeholder="Ej. plantas de tratamiento, bombas, monitoreo de calidad de agua…"></textarea>
+              </div>
+              <div class="form-field">
+                <label for="f-busca">¿Qué buscas en el Foro?</label>
+                <textarea id="f-busca" name="productos_busca" rows="2" maxlength="500" placeholder="Necesidades, proyectos o proveedores que te interesa encontrar…"></textarea>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <span class="form-label-group">¿Con qué sectores te interesa reunirte?</span>
+              <div class="check-chips" id="sectoresChips">
+                <label><input type="checkbox" name="sectores_interes" value="agua_potable" /><span>Agua potable</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="tratamiento" /><span>Tratamiento y reúso</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="riego_agricola" /><span>Riego agrícola</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="tecnologia_iot" /><span>Tecnología e IoT</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="construccion" /><span>Construcción</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="consultoria" /><span>Consultoría</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="equipos_bombas" /><span>Equipos y bombas</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="quimicos" /><span>Productos químicos</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="energia" /><span>Energía</span></label>
+                <label><input type="checkbox" name="sectores_interes" value="industria" /><span>Industria / Compras</span></label>
+              </div>
+            </div>
+
+            <div class="form-field">
+              <span class="form-label-group">Disponibilidad para reuniones 1 a 1</span>
+              <div class="check-chips">
+                <label><input type="checkbox" name="disponibilidad" value="24_manana" /><span>24 sep · Mañana</span></label>
+                <label><input type="checkbox" name="disponibilidad" value="24_tarde" /><span>24 sep · Tarde</span></label>
+                <label><input type="checkbox" name="disponibilidad" value="25_manana" /><span>25 sep · Mañana</span></label>
+                <label><input type="checkbox" name="disponibilidad" value="25_tarde" /><span>25 sep · Tarde</span></label>
+              </div>
+            </div>
+
+            <label class="check-line">
+              <input type="checkbox" name="autoriza_contacto" value="1" />
+              <span>Autorizo que mi información de contacto se comparta con participantes del Networking B2B con intereses afines, exclusivamente para fines de matchmaking del evento.</span>
+            </label>
+          </fieldset>
+
+          <label class="check-line">
+            <input type="checkbox" name="aviso_privacidad" value="1" required />
+            <span>He leído y acepto el <strong>aviso de privacidad</strong>. Mis datos serán utilizados únicamente para la organización del Foro Estatal Agua en la Industria 2026. <i>*</i></span>
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-gold" id="registroSubmit">Enviar registro</button>
+            <p class="form-note"><i>*</i> Campos obligatorios · Recibirás un folio de confirmación al finalizar.</p>
+          </div>
+
+          <div class="form-msg" id="registroMsg" role="status" aria-live="polite" hidden></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. CONTACTO -->
   <section class="section section-contact" id="contacto">
     <div class="container contact-grid">
       <div class="contact-copy reveal">
@@ -420,6 +638,7 @@
         <a href="#programa">Programa</a>
         <a href="#ecosistema">Ecosistema B2B</a>
         <a href="#patrocinios">Patrocinios</a>
+        <a href="#registro">Registro</a>
         <a href="#contacto">Contacto</a>
       </nav>
     </div>
