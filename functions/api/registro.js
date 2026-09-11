@@ -28,6 +28,66 @@ const TIPOS_VALIDOS = ["empresa", "gobierno", "academia", "organizacion", "publi
 const DIAS_VALIDOS = ["24", "25", "ambos"];
 const TIPO_PART_VALIDOS = ["ofrezco", "busco", "ambos"];
 
+/* ---------- Correo de confirmación (Resend) ----------
+   Requiere los secretos RESEND_API_KEY y EMAIL_FROM en
+   Workers → Settings → Variables and Secrets.
+   Si no están configurados, el registro funciona igual,
+   solo que no se envía correo. */
+function emailHtml(p, folio, conB2b) {
+  const dias = p.dias_asistencia === "ambos" ? "24 y 25 de septiembre de 2026" :
+    (p.dias_asistencia === "24" ? "24 de septiembre de 2026" : "25 de septiembre de 2026");
+  return `<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f7f4ef;font-family:Arial,Helvetica,sans-serif;color:#2b2320;">
+  <div style="max-width:600px;margin:0 auto;padding:24px;">
+    <div style="background:linear-gradient(160deg,#3d0d18,#6e1a2e);border-radius:14px 14px 0 0;padding:28px 32px;text-align:center;">
+      <p style="color:#d9bd85;font-size:12px;letter-spacing:3px;text-transform:uppercase;margin:0 0 6px;">Registro confirmado</p>
+      <h1 style="color:#ffffff;font-size:22px;margin:0;">Foro Estatal Agua en la Industria</h1>
+      <p style="color:rgba(255,255,255,.75);font-size:13px;margin:8px 0 0;">Tamaulipas 2026 · Secretaría de Recursos Hidráulicos para el Desarrollo Social</p>
+    </div>
+    <div style="background:#ffffff;padding:32px;border:1px solid #e3dccd;border-top:0;border-radius:0 0 14px 14px;">
+      <p style="font-size:15px;">Hola <strong>${p.nombre} ${p.apellidos}</strong>,</p>
+      <p style="font-size:15px;line-height:1.6;">Tu registro al <strong>Foro Estatal Agua en la Industria</strong> quedó confirmado.${conB2b ? " Tu perfil de <strong>Networking B2B</strong> también fue capturado para el matchmaking." : ""}</p>
+      <div style="background:#f3e9d3;border:1px dashed #a97f3d;border-radius:10px;text-align:center;padding:18px;margin:22px 0;">
+        <p style="margin:0 0 4px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#6f6660;">Tu folio de acceso</p>
+        <p style="margin:0;font-size:26px;font-weight:bold;color:#6e1a2e;letter-spacing:2px;">${folio}</p>
+        <p style="margin:8px 0 0;font-size:12px;color:#6f6660;">Preséntalo el día del evento</p>
+      </div>
+      <table style="width:100%;font-size:14px;line-height:1.8;">
+        <tr><td style="color:#6f6660;width:90px;vertical-align:top;">Fecha</td><td><strong>${dias}</strong></td></tr>
+        <tr><td style="color:#6f6660;vertical-align:top;">Sede</td><td>Centro de Convenciones "Mundo Nuevo", Matamoros, Tamaulipas</td></tr>
+        <tr><td style="color:#6f6660;vertical-align:top;">Horario</td><td>9:00 a.m. a 3:30 p.m. · Registro y acceso desde las 8:00 a.m.</td></tr>
+      </table>
+      <p style="font-size:13px;color:#6f6660;margin-top:24px;line-height:1.6;">¿Dudas o cambios en tu registro? Escríbenos a
+        <a href="mailto:hector.azua@tamaulipas.gob.mx" style="color:#8a2439;">hector.azua@tamaulipas.gob.mx</a> o llama al 834 106-7039.</p>
+    </div>
+    <p style="text-align:center;font-size:11px;color:#6f6660;padding:16px;">© 2026 Gobierno del Estado de Tamaulipas · www.foroaguaenlaindustria.lat</p>
+  </div>
+</body></html>`;
+}
+
+async function enviarConfirmacion(env, p, folio, conB2b) {
+  if (!env.RESEND_API_KEY || !env.EMAIL_FROM) return; // correo no configurado
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + env.RESEND_API_KEY,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: env.EMAIL_FROM,
+        to: [p.correo],
+        subject: `Registro confirmado · ${folio} · Foro Estatal Agua en la Industria`,
+        html: emailHtml(p, folio, conB2b)
+      })
+    });
+    if (!res.ok) console.log("Resend error:", res.status, await res.text());
+  } catch (err) {
+    console.log("Error enviando correo:", String(err));
+  }
+}
+
 /* Verificación opcional de Cloudflare Turnstile (anti-bots).
    Solo se ejecuta si configuraste el secreto TURNSTILE_SECRET
    en Pages → Settings → Environment variables. */
@@ -48,7 +108,7 @@ async function verificarTurnstile(token, env, ip) {
 }
 
 export async function onRequestPost(context) {
-  const { request, env } = context;
+  const { request, env, ctx } = context;
 
   if (!env.DB) {
     return json({ ok: false, error: "Base de datos no configurada." }, 500);
@@ -157,6 +217,11 @@ export async function onRequestPost(context) {
       b2b.sectores_interes, b2b.disponibilidad, b2b.autoriza_contacto
     ).run();
   }
+
+  /* Envío del correo de confirmación (no bloquea la respuesta;
+     si falla el envío, el registro ya quedó guardado) */
+  const envio = enviarConfirmacion(env, p, folio, !!b2b);
+  if (ctx && ctx.waitUntil) ctx.waitUntil(envio); else await envio;
 
   return json({ ok: true, folio, nombre: p.nombre, b2b: !!b2b }, 201);
 }
