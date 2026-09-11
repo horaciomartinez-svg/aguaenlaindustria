@@ -1,8 +1,10 @@
 # ============================================================
 # Configuración del Worker — Foro Estatal Agua en la Industria
 # Cloudflare Workers Builds lee este archivo al desplegar
-# desde GitHub. El binding DB (D1) y el secreto ADMIN_PASSWORD
-# se configuran en el dashboard (Settings → Bindings / Variables).
+# desde GitHub. La base D1 queda declarada aquí para que el
+# binding DB no se pierda en cada despliegue. Los secretos
+# (ADMIN_PASSWORD, RESEND_API_KEY, EMAIL_FROM) se mantienen
+# en el dashboard (Settings → Variables and Secrets).
 # ============================================================
 
 name = "foroaguaenlaindustria"
@@ -12,3 +14,8 @@ compatibility_date = "2025-09-01"
 [assets]
 directory = "./"
 binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "foro-registro"
+database_id = "b298c817-5f0a-4d6f-b64d-4dbc623ebeac"
