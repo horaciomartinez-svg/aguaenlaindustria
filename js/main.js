@@ -136,15 +136,29 @@
     clearInvalid();
     msg.hidden = true;
 
+    // Normaliza el sitio web antes de validar: acepta "ferreysa.com"
+    // y lo convierte en URL válida para el input type="url".
+    var webField = form.elements["sitio_web"];
+    if (webField && webField.value.trim() && !/^[a-z][a-z0-9+.-]*:\/\//i.test(webField.value.trim())) {
+      webField.value = "https://" + webField.value.trim();
+    }
+
     // Validación nativa + marcado visual
     if (!form.checkValidity()) {
-      var firstBad = form.querySelector(":invalid");
+      var badFields = form.querySelectorAll(":invalid");
+      var nombres = [];
+      badFields.forEach(function (el) {
+        el.classList.add("invalid");
+        var lbl = el.id && form.querySelector('label[for="' + el.id + '"]');
+        var nombre = lbl ? lbl.textContent.replace(/\s*\*\s*$/, "").trim() : (el.name || "campo");
+        if (nombres.indexOf(nombre) === -1) nombres.push(nombre);
+      });
+      var firstBad = badFields[0];
       if (firstBad) {
-        firstBad.classList.add("invalid");
         firstBad.scrollIntoView({ behavior: "smooth", block: "center" });
         firstBad.focus({ preventScroll: true });
       }
-      showMsg("error", "Revisa los campos marcados: falta información obligatoria o algún dato no es válido.");
+      showMsg("error", "Revisa los campos marcados: falta información obligatoria o algún dato no es válido (" + nombres.join(", ") + ").");
       return;
     }
 

@@ -163,7 +163,11 @@ export async function onRequestPost(context) {
       rfc: str(b.rfc, 13) || null,
       sector: str(b.sector, 40),
       tamanio_empresa: str(b.tamanio_empresa, 20) || null,
-      sitio_web: str(b.sitio_web, 150) || null,
+      sitio_web: (() => {
+        const w = str(b.sitio_web, 150);
+        if (!w) return null;
+        return /^[a-z][a-z0-9+.-]*:\/\//i.test(w) ? w : "https://" + w;
+      })(),
       tipo_participacion: str(b.tipo_participacion, 20),
       descripcion: str(b.descripcion, 500),
       productos_ofrece: str(b.productos_ofrece, 500) || null,
